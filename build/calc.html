@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/output.css">
+</head>
+<style>
+  .hidden-button {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Add this CSS to your <style> section */
+  .dark-theme {
+    background-color: #111;
+    color: #fff;
+  }
+
+  /* Add this class to change input text color in dark mode */
+  .dark-theme input {
+    color: #fff;
+  }
+</style>
+
+<body class="flex justify-center items-center h-screen bg-gray-100 light-theme">
+  <main>
+    <div class="flex">
+      <div class="border border-b-gray-950 mx-auto mt-24 w-[40rem] h-[50rem]">
+        <input readonly id="inputField" class="flex border active: border-b-gray-950 py-[4.6rem] text-4xl w-full" type="text">
+        <div class="grid grid-cols-4 gap-4 mt-3">
+          <!-- Create buttons from 0 to 9 -->
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(1)" type="button">1</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(2)" type="button">2</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(3)" type="button">3</button>
+          <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="backspace()" type="button">←</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(4)" type="button">4</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(5)" type="button">5</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(6)" type="button">6</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput('/')" type="button">/</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(7)" type="button">7</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(8)" type="button">8</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(9)" type="button">9</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput('+')" type="button">+</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput(0)" type="button">0</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput('.')" type="button">.</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput('*')" type="button">*</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="addToInput('-')" type="button">-</button>
+          <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-10 px-7 rounded" onclick="clearInput()"
+            type="button">Clear</button>
+          <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-10 px-7 rounded hidden-button"
+            onclick="calculate()" type="button">Calculate</button>
+          <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-10 px-7 rounded hidden-button"
+            onclick="calculate()" type="button">Calculate</button>
+          <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-10 px-7 rounded"
+            onclick="calculate()" type="button">Calculate</button>
+        </div>
+      </div>
+      <div class="border w-[20rem] h-[50rem] p-4 ml-4">
+        <h2 class="text-xl font-semibold mb-2">History</h2>
+        <button id="history" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+          onclick="clearHistory()" type="button">Clear History</button>
+        <div id="historyBox"></div>
+      </div>
+      <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mt-4 ml-4"
+        onclick="toggleTheme()" type="button">Toggle Theme</button>
+    </div>
+  </main>
+
+  <script>
+    const historyKey = 'calculator_history';
+
+    function addToInput(number) {
+      const inputField = document.getElementById('inputField');
+      inputField.value += number;
+    }
+
+    function calculate() {
+      const inputField = document.getElementById('inputField');
+      const expression = inputField.value;
+      const result = eval(expression);
+      inputField.value = result;
+      updateHistory(expression, result);
+    }
+
+    function clearInput() {
+      const inputField = document.getElementById('inputField');
+      inputField.value = '';
+    }
+
+    function backspace() {
+      const inputField = document.getElementById('inputField');
+      inputField.value = inputField.value.slice(0, -1);
+    }
+
+    function updateHistory(expression, result) {
+      const historyBox = document.getElementById('historyBox');
+      const historyItem = document.createElement('div');
+      historyItem.textContent = `${expression} = ${result}`;
+      historyBox.appendChild(historyItem);
+
+      // Store history in local storage
+      const historyData = getStoredHistory();
+      historyData.push({ expression, result });
+      localStorage.setItem(historyKey, JSON.stringify(historyData));
+    }
+
+    function clearHistory() {
+      const historyBox = document.getElementById('historyBox');
+      historyBox.innerHTML = '';
+
+      // Clear history from local storage
+      localStorage.removeItem(historyKey);
+    }
+
+    function getStoredHistory() {
+      const storedData = localStorage.getItem(historyKey);
+      return storedData ? JSON.parse(storedData) : [];
+    }
+
+    // Load stored history on page load
+    window.onload = function () {
+      const historyData = getStoredHistory();
+      const historyBox = document.getElementById('historyBox');
+      historyData.forEach(data => {
+        const historyItem = document.createElement('div');
+        historyItem.textContent = `${data.expression} = ${data.result}`;
+        historyBox.appendChild(historyItem);
+      });
+    };
+    function toggleTheme() {
+      const body = document.body;
+      const inputField = document.getElementById('inputField'); // Replace 'inputField' with your actual input field ID
+      body.classList.toggle('dark-theme');
+      inputField.classList.toggle('dark-theme'); // Add or remove the class based on theme
+    }
+
+  </script>
+
+</body>
+
+</html>
+
+</div>
+</main>
+</body>
+
+</html>
